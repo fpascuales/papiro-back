@@ -11,7 +11,7 @@ const signUp = async (req, res, next) => {
         if(req.file){
             newUser.image = req.file.path;
         }
-        // await newUser.save();
+        await newUser.save();
         return res.status(201).json(newUser)
     } catch (error) {
         return next(error);

@@ -22,7 +22,7 @@ db.connectDB();
 const postsRoutes = require("./src/api/posts/posts.routes.js");
 const usersRoutes = require("./src/api/users/users.routes.js");
 server.use("/posts", postsRoutes);
-server.use("/posts", usersRoutes);
+server.use("/users", usersRoutes);
 
 server.use((err, req, res, next) => {
     return res.status(err.status || 500).json(err.message || "Error")

@@ -8,7 +8,10 @@ const signUp = async (req, res, next) => {
             req.body.rol = "user";
         }
         const newUser = new User(req.body);
-        await newUser.save();
+        if(req.file){
+            newUser.image = req.file.path;
+        }
+        // await newUser.save();
         return res.status(201).json(newUser)
     } catch (error) {
         return next(error);
@@ -25,6 +28,9 @@ const updateUser = async (req, res, next) => {
         const idUserParsed = idUser.slice(1, idUser.length, -1);
         if(req.user.rol === "admin" || idUserParsed === id){
             userToUpdate._id = id;
+            if(req.file){
+                req.body.image = req.file.path;
+            }
             const userUpdated = await User.findByIdAndUpdate(id, userToUpdate, {new: true});
             return res.json(userUpdated);
         }

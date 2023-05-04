@@ -71,7 +71,7 @@ const login = async (req, res, next) => {
             return res.status(400).json("Usuario no encontrado");
         }
         if(bcrypt.compareSync(req.body.password, userToLog.password)){
-            const token = generateSign(userToLog.id, userToLog.user);
+            const token = generateSign(userToLog._id, userToLog.username);
             return res.status(200).json({token, userToLog});
         }
         else{

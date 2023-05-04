@@ -7,6 +7,7 @@ const signUp = async (req, res, next) => {
         if(req.body.rol === "admin"){
             req.body.rol = "user";
         }
+        bcrypt.hashSync(req.body.password, 10)
         const newUser = new User(req.body);
         if(req.file){
             newUser.image = req.file.path;

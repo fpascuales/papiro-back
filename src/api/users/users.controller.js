@@ -7,7 +7,6 @@ const signUp = async (req, res, next) => {
         if(req.body.rol === "admin"){
             req.body.rol = "user";
         }
-        bcrypt.hashSync(req.body.password, 10)
         const newUser = new User(req.body);
         if(req.file){
             newUser.image = req.file.path;
@@ -25,7 +24,7 @@ const updateUser = async (req, res, next) => {
         if(req.user.rol !== "admin"){
             userToUpdate.rol = "user";
         }
-        const idUser = JSON.stringify(req.user._id);
+        const idUser = JSON.stringify(req.user.id);
         const idUserParsed = idUser.slice(1, idUser.length, -1);
         if(req.user.rol === "admin" || idUserParsed === id){
             userToUpdate._id = id;
@@ -66,12 +65,12 @@ const deleteUser = async (req, res, next) => {
 }
 const login = async (req, res, next) => {
     try{
-        const userToLog = await User.findOne({user: req.body.user});
+        const userToLog = await User.findOne({username: req.body.username});
         if(!userToLog){
             return res.status(400).json("Usuario no encontrado");
         }
         if(bcrypt.compareSync(req.body.password, userToLog.password)){
-            const token = generateSign(userToLog._id, userToLog.username);
+            const token = generateSign(userToLog.id, userToLog.username);
             return res.status(200).json({token, userToLog});
         }
         else{

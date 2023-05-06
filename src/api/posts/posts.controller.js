@@ -13,7 +13,7 @@ const getPostById = async (req, res, next) => {
         const { id } = req.params;
         const post = await Post.findById(id);
         if(!post){
-            return res.json("El post no existe");
+            return res.status(404).json("El post no existe");
         }
         return res.status(200).json(post);
     } catch (error) {
@@ -32,8 +32,20 @@ const createPost = async (req, res, next) => {
 const updatePost = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const postUpdated = await Post.findByIdAndUpdate(id, req.body, {new: true});
-        return res.status(200).json(postUpdated);
+        const post = await Post.findById(id);
+        if(!post){
+            return res.status(404).json("El post no existe");
+        }
+        const userPost = post.user.toString();
+        const idUser = JSON.stringify(req.user.id);
+        const idUserParsed = idUser.slice(1, -1);
+        if(req.user.rol === "admin" || idUserParsed === userPost){
+            const postUpdated = await Post.findByIdAndUpdate(id, req.body, {new: true});
+            return res.status(200).json(postUpdated);
+        }
+        else{
+            return res.json("Solo los administradores pueden modificar post de otros usuarios");
+        }
     } catch (error) {
         return next(error);
     }
@@ -41,8 +53,20 @@ const updatePost = async (req, res, next) => {
 const deletePost = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const postDeleted = await Post.findByIdAndDelete(id);
-        return res.status(200).json(postDeleted);
+        const post = await Post.findById(id);
+        if(!post){
+            return res.status(404).json("El post no existe");
+        }
+        const userPost = post.user.toString();
+        const idUser = JSON.stringify(req.user.id);
+        const idUserParsed = idUser.slice(1, -1);
+        if(req.user.rol === "admin" || idUserParsed === userPost){
+            const postDeleted = await Post.findByIdAndDelete(id);
+            return res.status(200).json(postDeleted);
+        }
+        else{
+            return res.json("Solo los administradores pueden eliminar post de otros usuarios");
+        }
     } catch (error) {
         return next(error);
     }

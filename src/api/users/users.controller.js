@@ -20,6 +20,10 @@ const signUp = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try {
         const { id } = req.params;
+        const user = await User.findById(id);
+        if(!user){
+            return res.status(404).json("El usuario no existe");
+        }
         const userToUpdate = new User(req.body);
         if(req.user.rol !== "admin"){
             userToUpdate.rol = "user";
@@ -48,6 +52,10 @@ const updateUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
     try {
         const { id } = req.params;
+        const user = await User.findById(id);
+        if(!user){
+            return res.status(404).json("El usuario no existe");
+        }
         const userToUpdate = new User(req.body);
         if(req.user.rol !== "admin"){
             userToUpdate.rol = "user";
@@ -97,7 +105,7 @@ const getUserById = async (req, res, next) => {
         const { id } = req.params;
         const user = await User.findById(id);
         if(!user){
-            return res.json("El usuario no existe");
+            return res.status(404).json("El usuario no existe");
         }
         else{
             if(req.user.rol !== "admin"){

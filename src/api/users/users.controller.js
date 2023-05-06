@@ -25,11 +25,14 @@ const updateUser = async (req, res, next) => {
             userToUpdate.rol = "user";
         }
         const idUser = JSON.stringify(req.user.id);
-        const idUserParsed = idUser.slice(1, idUser.length, -1);
+        const idUserParsed = idUser.slice(1, -1);
         if(req.user.rol === "admin" || idUserParsed === id){
             userToUpdate._id = id;
             if(req.file){
                 req.body.image = req.file.path;
+            }
+            if(req.body.password) {
+                userToUpdate.password = bcrypt.hashSync(req.body.password, 10);
             }
             const userUpdated = await User.findByIdAndUpdate(id, userToUpdate, {new: true});
             return res.json(userUpdated);
@@ -96,7 +99,20 @@ const getUserById = async (req, res, next) => {
         if(!user){
             return res.json("El usuario no existe");
         }
-        return res.status(200).json(user);
+        else{
+            if(req.user.rol !== "admin"){
+                user.rol = "user";
+            }
+            const idUser = JSON.stringify(req.user.id);
+            const idUserParsed = idUser.slice(1, -1);
+            if(req.user.rol === "admin" || idUserParsed === id){
+                user._id = id;
+                return res.status(200).json(user);
+            }
+            else{
+                return res.json("Solo los administradores pueden ver otros usuarios");
+            }
+        }
     } catch (error) {
         return next(error);
     }

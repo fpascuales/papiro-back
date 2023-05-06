@@ -56,9 +56,9 @@ const deleteUser = async (req, res, next) => {
         if(!user){
             return res.status(404).json("El usuario no existe");
         }
-        const userToUpdate = new User(req.body);
+        const userToDelete = new User(req.body);
         if(req.user.rol !== "admin"){
-            userToUpdate.rol = "user";
+            userToDelete.rol = "user";
         }
         const idUser = JSON.stringify(req.user._id);
         const idUserParsed = idUser.slice(1, idUser.length, -1);

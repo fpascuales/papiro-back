@@ -8,6 +8,6 @@ usersRoutes.put("/:id", [isAuth], updateUser);
 usersRoutes.delete("/:id", [isAdmin], deleteUser);
 usersRoutes.post("/login", login);
 usersRoutes.get("/", [isAdmin], getAllUsers);
-usersRoutes.get("/:id", [isAuth], getUserById);
+usersRoutes.get("/:id", getUserById);
 
 module.exports = usersRoutes;

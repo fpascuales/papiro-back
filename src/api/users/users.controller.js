@@ -107,24 +107,36 @@ const getUserById = async (req, res, next) => {
         if(!user){
             return res.status(404).json("El usuario no existe");
         }
-        else{
-            if(req.user.rol !== "admin"){
-                user.rol = "user";
-            }
-            const idUser = JSON.stringify(req.user.id);
-            const idUserParsed = idUser.slice(1, -1);
-            if(req.user.rol === "admin" || idUserParsed === id){
-                user._id = id;
-                return res.status(200).json(user);
-            }
-            else{
-                return res.json("Solo los administradores pueden ver otros usuarios");
-            }
-        }
+        return res.status(200).json(user);
     } catch (error) {
         return next(error);
     }
 }
+// const getUserById = async (req, res, next) => {
+//     try {
+//         const { id } = req.params;
+//         const user = await User.findById(id);
+//         if(!user){
+//             return res.status(404).json("El usuario no existe");
+//         }
+//         else{
+//             if(req.user.rol !== "admin"){
+//                 user.rol = "user";
+//             }
+//             const idUser = JSON.stringify(req.user.id);
+//             const idUserParsed = idUser.slice(1, -1);
+//             if(req.user.rol === "admin" || idUserParsed === id){
+//                 user._id = id;
+//                 return res.status(200).json(user);
+//             }
+//             else{
+//                 return res.json("Solo los administradores pueden ver otros usuarios");
+//             }
+//         }
+//     } catch (error) {
+//         return next(error);
+//     }
+// }
 module.exports = {
     signUp,
     updateUser,

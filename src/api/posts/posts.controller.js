@@ -23,6 +23,9 @@ const getPostById = async (req, res, next) => {
 const createPost = async (req, res, next) => {
     try {
         const newPost = await new Post(req.body);
+        if(req.file){
+            newPost.image = req.file.path;
+        }
         await newPost.save();
         return res.status(200).json(newPost);
     } catch (error) {
@@ -40,6 +43,9 @@ const updatePost = async (req, res, next) => {
         const idUser = JSON.stringify(req.user.id);
         const idUserParsed = idUser.slice(1, -1);
         if(req.user.rol === "admin" || idUserParsed === userPost){
+            if(req.file){
+                req.body.image = req.file.path;
+            }
             const postUpdated = await Post.findByIdAndUpdate(id, req.body, {new: true});
             return res.status(200).json(postUpdated);
         }

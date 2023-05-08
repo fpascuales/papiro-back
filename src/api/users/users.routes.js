@@ -5,7 +5,7 @@ const { signUp, updateUser, deleteUser, login, getAllUsers, getUserById, checkSe
 const usersRoutes = require("express").Router();
 
 usersRoutes.post("/", uploadImage.single('image'), signUp);
-usersRoutes.put("/:id", [isAuth], updateUser);
+usersRoutes.put("/:id", [isAuth], uploadImage.single('image'), updateUser);
 usersRoutes.delete("/:id", [isAdmin], deleteUser);
 usersRoutes.post("/login", login);
 usersRoutes.get("/", [isAdmin], getAllUsers);

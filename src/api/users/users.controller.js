@@ -8,7 +8,9 @@ const signUp = async (req, res, next) => {
             req.body.rol = "user";
         }
         const newUser = new User(req.body);
+        console.log(`Nuevo Usuario: ${newUser}`);
         if(req.file){
+            console.log(`ARchivo: ${req.file}`);
             newUser.image = req.file.path;
         }
         await newUser.save();

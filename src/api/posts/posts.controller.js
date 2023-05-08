@@ -26,6 +26,12 @@ const createPost = async (req, res, next) => {
         if(req.file){
             newPost.image = req.file.path;
         }
+        if(!req.body.title){
+            return res.status(400).json("El título es obligatorio");
+        }
+        if(!req.body.body){
+            return res.status(400).json("El mensaje es obligatorio");
+        }
         await newPost.save();
         return res.status(200).json(newPost);
     } catch (error) {

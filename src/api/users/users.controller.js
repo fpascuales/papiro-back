@@ -112,6 +112,13 @@ const getUserById = async (req, res, next) => {
         return next(error);
     }
 }
+const checkSession = async (req, res, next) => {
+    try {
+        return res.json(req.user)
+    } catch (error) {
+        return next(error);
+    }
+}
 // const getUserById = async (req, res, next) => {
 //     try {
 //         const { id } = req.params;
@@ -143,5 +150,6 @@ module.exports = {
     deleteUser,
     login,
     getAllUsers,
-    getUserById
+    getUserById,
+    checkSession
 }

@@ -8,7 +8,7 @@ usersRoutes.post("/", uploadImage.single('image'), signUp);
 usersRoutes.put("/:id", [isAuth], uploadImage.single('image'), updateUser);
 usersRoutes.delete("/:id", [isAdmin], deleteUser);
 usersRoutes.post("/login", login);
-usersRoutes.get("/", [isAdmin], getAllUsers);
+usersRoutes.get("/", getAllUsers);
 usersRoutes.get("/check", [isAuth], checkSession);
 usersRoutes.get("/:id", getUserById);
 

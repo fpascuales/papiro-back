@@ -1,3 +1,4 @@
+const { deleteFile } = require("../../middlewares/deleteFile");
 const Post = require("./posts.model");
 
 const getAllPosts = async (req, res, next) => {
@@ -49,7 +50,8 @@ const updatePost = async (req, res, next) => {
         const idUser = JSON.stringify(req.user.id);
         const idUserParsed = idUser.slice(1, -1);
         if(req.user.rol === "admin" || idUserParsed === userPost){
-            if(req.file){
+            if(req.file && req.file.path !== post.image){
+                deleteFile(post.image);
                 req.body.image = req.file.path;
             }
             const postUpdated = await Post.findByIdAndUpdate(id, req.body, {new: true});
@@ -73,6 +75,9 @@ const deletePost = async (req, res, next) => {
         const idUser = JSON.stringify(req.user.id);
         const idUserParsed = idUser.slice(1, -1);
         if(req.user.rol === "admin" || idUserParsed === userPost){
+            if(post.image) {
+                deleteFile(post.image);
+            }
             const postDeleted = await Post.findByIdAndDelete(id);
             return res.status(200).json(postDeleted);
         }

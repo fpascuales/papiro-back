@@ -22,7 +22,7 @@ const getPostById = async (req, res, next) => {
 }
 const createPost = async (req, res, next) => {
     try {
-        const newPost = await new Post(req.body);
+        const newPost = new Post(req.body);
         if(req.file){
             newPost.image = req.file.path;
         }

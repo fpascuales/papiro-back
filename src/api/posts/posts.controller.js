@@ -50,7 +50,7 @@ const updatePost = async (req, res, next) => {
         const idUser = JSON.stringify(req.user.id);
         const idUserParsed = idUser.slice(1, -1);
         if(req.user.rol === "admin" || idUserParsed === userPost){
-            if(req.file && req.file.path !== post.image){
+            if(req.file && post.image && req.file.path !== post.image){
                 deleteFile(post.image);
                 req.body.image = req.file.path;
             }

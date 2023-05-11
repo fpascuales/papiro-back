@@ -5,7 +5,7 @@ const isAuth = async (req, res, next) => {
     try {
         const token = req.headers.authorization;
         if(!token){
-            return res.json("No estás autorizado");
+            return res.status(401).json("No estás autorizado");
         }
         const parsedToken = token.replace("Bearer ", "");
         const validToken = verifyJwt(parsedToken);
@@ -22,7 +22,7 @@ const isAdmin = async (req, res, next) => {
     try {
         const token = req.headers.authorization;
         if(!token){
-            return res.json("No estás autorizado");
+            return res.status(401).json("No estás autorizado");
         }
         const parsedToken = token.replace("Bearer ", "");
         const validToken = verifyJwt(parsedToken);

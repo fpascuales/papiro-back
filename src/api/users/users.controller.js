@@ -1,8 +1,10 @@
+const { deleteFile } = require("../../middlewares/deleteFile");
 const { generateSign } = require("../../utils/jwt");
 const User = require("./users.model");
 const bcrypt = require("bcrypt");
 
 const signUp = async (req, res, next) => {
+    //meter comprobación de si ya existe un nombre de usuario en la bbdd
     try {
         if(req.body.rol === "admin"){
             req.body.rol = "user";
@@ -22,23 +24,24 @@ const updateUser = async (req, res, next) => {
         const { id } = req.params;
         const user = await User.findById(id);
         if(!user){
-            return res.status(404).json("El usuario no existe");
+            return res.status(404).json("Usuario no encontrado");
         }
-        const userToUpdate = new User(req.body);
         if(req.user.rol !== "admin"){
-            userToUpdate.rol = "user";
+            req.body.rol = "user";
         }
         const idUser = JSON.stringify(req.user.id);
         const idUserParsed = idUser.slice(1, -1);
         if(req.user.rol === "admin" || idUserParsed === id){
-            userToUpdate._id = id;
             if(req.file){
+                if(user.image){
+                    deleteFile(user.image);
+                }
                 req.body.image = req.file.path;
             }
             if(req.body.password) {
-                userToUpdate.password = bcrypt.hashSync(req.body.password, 10);
+                req.body.password = bcrypt.hashSync(req.body.password, 10);
             }
-            const userUpdated = await User.findByIdAndUpdate(id, userToUpdate, {new: true});
+            const userUpdated = await User.findByIdAndUpdate(id, req.body, {new: true});
             return res.json(userUpdated);
         }
         else{
@@ -54,7 +57,7 @@ const deleteUser = async (req, res, next) => {
         const { id } = req.params;
         const user = await User.findById(id);
         if(!user){
-            return res.status(404).json("El usuario no existe");
+            return res.status(404).json("Usuario no encontrado");
         }
         const userToDelete = new User(req.body);
         if(req.user.rol !== "admin"){
@@ -78,14 +81,14 @@ const login = async (req, res, next) => {
     try{
         const userToLog = await User.findOne({username: req.body.username});
         if(!userToLog){
-            return res.status(400).json("Usuario no encontrado");
+            return res.status(400).json("Datos incorrectos");
         }
         if(bcrypt.compareSync(req.body.password, userToLog.password)){
             const token = generateSign(userToLog.id, userToLog.username);
             return res.status(200).json({token, userToLog});
         }
         else{
-            return res.status(400).json("Error en la contraseña");
+            return res.status(400).json("Datos incorrectos");
         }
     }
     catch (error) {
@@ -105,7 +108,7 @@ const getUserById = async (req, res, next) => {
         const { id } = req.params;
         const user = await User.findById(id);
         if(!user){
-            return res.status(404).json("El usuario no existe");
+            return res.status(404).json("Usuario no encontrado");
         }
         return res.status(200).json(user);
     } catch (error) {

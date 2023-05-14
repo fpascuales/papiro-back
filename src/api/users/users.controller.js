@@ -4,7 +4,6 @@ const User = require("./users.model");
 const bcrypt = require("bcrypt");
 
 const signUp = async (req, res, next) => {
-    //meter comprobación de si ya existe un nombre de usuario en la bbdd
     try {
         if(req.body.rol === "admin"){
             req.body.rol = "user";
@@ -51,7 +50,6 @@ const updateUser = async (req, res, next) => {
         return next(error);
     }
 }
-//FUNCIÓN PARA BORRAR USUARIO PERO NO SUS POST
 const deleteUser = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -66,7 +64,6 @@ const deleteUser = async (req, res, next) => {
         const idUser = JSON.stringify(req.user._id);
         const idUserParsed = idUser.slice(1, idUser.length, -1);
         if(req.user.rol === "admin" || idUserParsed === id){
-            //TENGO QUE SACAR EL ID DEL ADMIN LOGUEADO, PARA ASIGNAR TODOS LOS POST A ESTE
             const userDeleted = await User.findByIdAndDelete(id)
             return res.json(userDeleted);
         }
@@ -122,31 +119,7 @@ const checkSession = async (req, res, next) => {
         return next(error);
     }
 }
-// const getUserById = async (req, res, next) => {
-//     try {
-//         const { id } = req.params;
-//         const user = await User.findById(id);
-//         if(!user){
-//             return res.status(404).json("El usuario no existe");
-//         }
-//         else{
-//             if(req.user.rol !== "admin"){
-//                 user.rol = "user";
-//             }
-//             const idUser = JSON.stringify(req.user.id);
-//             const idUserParsed = idUser.slice(1, -1);
-//             if(req.user.rol === "admin" || idUserParsed === id){
-//                 user._id = id;
-//                 return res.status(200).json(user);
-//             }
-//             else{
-//                 return res.json("Solo los administradores pueden ver otros usuarios");
-//             }
-//         }
-//     } catch (error) {
-//         return next(error);
-//     }
-// }
+
 module.exports = {
     signUp,
     updateUser,

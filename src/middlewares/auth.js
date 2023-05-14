@@ -10,7 +10,6 @@ const isAuth = async (req, res, next) => {
         const parsedToken = token.replace("Bearer ", "");
         const validToken = verifyJwt(parsedToken);
         const userLoged = await User.findById(validToken.id);
-
         userLoged.password = null;
         req.user = userLoged;
         next();
@@ -27,7 +26,6 @@ const isAdmin = async (req, res, next) => {
         const parsedToken = token.replace("Bearer ", "");
         const validToken = verifyJwt(parsedToken);
         const userLogged = await User.findById(validToken.id);
-
         if(userLogged.rol === "admin"){
             userLogged.password = null;
             req.user = userLogged;

@@ -25,7 +25,7 @@ server.use("/posts", postsRoutes);
 server.use("/users", usersRoutes);
 
 server.use((err, req, res, next) => {
-    return res.status(err.status || 500).json(err.message || "Error")
+    return res.status(err.status || 500).json(err.message || "Error");
 })
 server.use("*", (req, res, next) => {
     return res.status(404).json("Route not found");

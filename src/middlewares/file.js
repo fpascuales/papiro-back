@@ -6,7 +6,7 @@ const storageImage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "papiro",
-    allowedFormats: ["jpg", "png", "jpeg", "gif", "webp"],
+    allowedFormats: ["jpg", "png", "jpeg", "gif", "webp", "mp4", "mov"],
   },
 });
 
